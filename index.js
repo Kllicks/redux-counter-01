@@ -29,6 +29,14 @@ const ACTION_DEC = {
     type: 'DECREMENT'
 };
 
+const ACTION_ADD = {
+    type:'ADD_COUNTER'
+};
+
+const ACTION_DEL = {
+    type: 'DEL_COUNTER'
+};
+
 // "Action Creators"
 // When you need to configure an action, write a function
 function incrementCounter(id) {
@@ -46,6 +54,19 @@ function decrementCounter(id) {
     }
 }
 //example: store.dispatch(decrementCounter('abc-123-abc-123'));
+
+function addCounter() {
+    return {
+        ...ACTION_ADD
+    }
+};
+
+function delCounter(id) {
+    return {
+        ...ACTION_DEL,
+        id
+    }
+}
 
 // #3 - Write a pure function that accepts the current state and an action, then returns the new version state
 
@@ -88,7 +109,25 @@ const counter = (state=defaultState, action) => {
                     }
                 })
             };
-
+        case ACTION_ADD.type:
+        // return all the existing couters, but also a new one    
+            return {   
+                counters: [
+                    ...state.counters,
+                    {
+                        id: uuid(),
+                        count: 0
+                    }
+                ]
+            }
+        case ACTION_DEL.type:
+            return  {
+                // we want all the counters except the one whose id matches action.id
+                counters: state.counters.filter(oneCounter => {
+                    const canGoIntoClub = oneCounter.id !== action.id;
+                    return canGoIntoClub;
+                })
+            }
         default:
         // else return the state as-is
             return state;
@@ -108,8 +147,8 @@ module.exports = {
     store,
     incrementCounter,
     decrementCounter,
-    ACTION_INC,
-    ACTION_DEC
+    addCounter,
+    delCounter
 };
 
 /*
