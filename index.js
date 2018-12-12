@@ -76,7 +76,17 @@ const counter = (state=defaultState, action) => {
         // if its 'DECREMENT', return a new state object with the count - 1
             return {
                 // count: state.count-1
-
+                counters: state.counters.map(oneCounter => {
+                    if (oneCounter.id === action.id) {
+                        // return a new version of oneCounter
+                        return {
+                            ...oneCounter,
+                            count: oneCounter.count - 1
+                        }
+                    } else {
+                        return oneCounter;
+                    }
+                })
             };
 
         default:
@@ -91,11 +101,13 @@ const store = createStore(counter);
 // You can subscribe to notifications of any changes to the state
 store.subscribe(() => {
     const theState = store.getState();
-    console.log(`The state is now: ${theState.count}`);
+    console.log(`The state is now: ${theState.counters}`);
 });
 
 module.exports = {
     store,
+    incrementCounter,
+    decrementCounter,
     ACTION_INC,
     ACTION_DEC
 };
