@@ -1,7 +1,16 @@
+const {createStore} = require('redux');
+const uuid = require('uuid/v4');
+
+
 // #1 Write out an example/default version of my application state
 
 const defaultState = {
-    count: 0
+    counter: [
+        {
+            id: uuid(),
+            count: 0
+        }
+    ]
 };
 
 // #2 - Describe the ways that state can change
@@ -43,3 +52,26 @@ const counter = (state=defaultState, action) => {
             return state;
     }
 };
+
+// #4 - Create your store that knows how to use your reducer function(counter)
+const store = createStore(counter);
+
+// You can subscribe to notifications of any changes to the state
+store.subscribe(() => {
+    const theState = store.getState();
+    console.log(`The state is now: ${theState.count}`);
+});
+
+module.exports = {
+    store,
+    ACTION_INC,
+    ACTION_DEC
+};
+
+/*
+const {
+    store,
+    ACTION_INC,
+    ACTION_DEC
+} = require('./index');
+*/
